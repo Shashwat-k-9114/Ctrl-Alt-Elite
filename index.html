@@ -1,0 +1,2205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ctrl+Alt+Elite — BIT Noida Tech Quiz</title>
+    <meta name="description" content="Elite, buzzer-based intra-college tech quiz hosted by IT Club at BIT Noida">
+    <!-- Open Graph tags -->
+    <meta property="og:title" content="Ctrl+Alt+Elite — BIT Noida Tech Quiz">
+    <meta property="og:description" content="Where Every Mind is Wired to Win - A high-voltage, buzzer-only tech quiz">
+    <meta property="og:type" content="website">
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>>_</text></svg>">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for theming */
+        :root {
+            --bg: #0a0f0f;
+            --panel: #0f1517;
+            --primary: #00ff9c;
+            --secondary: #00e5ff;
+            --accent: #ff2ee6;
+            --muted: #8aa1a1;
+            --warning: #ffcc00;
+            --danger: #ff4d4d;
+            --text: #e0e0e0;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* CRT Scanlines Effect */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.3;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--secondary), transparent);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        /* Layout */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 156, 0.2), transparent);
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+
+        .btn:hover {
+            color: var(--bg);
+            background-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 255, 156, 0.5);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-secondary {
+            color: var(--secondary);
+            border-color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            color: var(--bg);
+            background-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+        }
+
+        .btn-accent {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .btn-accent:hover {
+            color: var(--bg);
+            background-color: var(--accent);
+            box-shadow: 0 0 15px rgba(255, 46, 230, 0.5);
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(10, 15, 15, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 156, 0.2);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-left: 2rem;
+        }
+
+        .nav-menu a {
+            font-family: var(--font-mono);
+            color: var(--text);
+            text-decoration: none;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a:focus::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .hero-tagline {
+            font-size: 1.5rem;
+            color: var(--muted);
+            margin-bottom: 2rem;
+            font-family: var(--font-mono);
+        }
+
+        .terminal-container {
+            background-color: var(--panel);
+            border: 1px solid rgba(0, 255, 156, 0.3);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: left;
+            box-shadow: 0 0 20px rgba(0, 255, 156, 0.1);
+        }
+
+        .terminal-prompt {
+            color: var(--primary);
+            font-family: var(--font-mono);
+        }
+
+        .terminal-command {
+            color: var(--text);
+            font-family: var(--font-mono);
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background-color: var(--primary);
+            margin-left: 4px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        /* Canvas for Matrix Rain */
+        #matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-text {
+            padding-right: 2rem;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .info-card {
+            background-color: var(--panel);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 229, 255, 0.2);
+        }
+
+        .info-card i {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .info-card h4 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Key Facts Section */
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .fact-card {
+            background-color: var(--panel);
+            border: 1px solid rgba(0, 255, 156, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fact-card::before {
+            content: ">";
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            color: var(--primary);
+            font-family: var(--font-mono);
+            font-weight: bold;
+        }
+
+        .fact-card h3 {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .fact-card p {
+            padding-left: 1.5rem;
+            margin-bottom: 0;
+            color: var(--muted);
+        }
+
+        /* Rounds & Rules Section */
+        .accordion {
+            margin-top: 2rem;
+        }
+
+        .accordion-item {
+            background-color: var(--panel);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-mono);
+            color: var(--secondary);
+        }
+
+        .accordion-header::after {
+            content: "+";
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-header::after {
+            transform: rotate(45deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 1000px;
+        }
+
+        .accordion-body {
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .rules-list {
+            list-style: none;
+        }
+
+        .rules-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .rules-list li::before {
+            content: "•";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Registration Section */
+        .registration-form {
+            background-color: var(--panel);
+            border: 1px solid rgba(255, 46, 230, 0.2);
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-family: var(--font-mono);
+            color: var(--accent);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 46, 230, 0.3);
+            border-radius: 4px;
+            color: var(--text);
+            font-family: var(--font-sans);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(255, 46, 230, 0.3);
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .privacy-note {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        /* Study Material Section */
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
+        .category-chip {
+            padding: 0.5rem 1rem;
+            background-color: var(--panel);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 50px;
+            color: var(--text);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-chip:hover,
+        .category-chip.active {
+            background-color: var(--secondary);
+            color: var(--bg);
+        }
+
+        .sample-questions {
+            margin-top: 3rem;
+        }
+
+        .question-item {
+            background-color: var(--panel);
+            border: 1px solid rgba(0, 255, 156, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-header {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-mono);
+            color: var(--primary);
+        }
+
+        .question-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .question-item.active .question-answer {
+            max-height: 1000px;
+            margin-top: 1rem;
+        }
+
+        /* Schedule Section */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 30px;
+            height: 100%;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 80px;
+        }
+
+        .timeline-bullet {
+            position: absolute;
+            left: 22px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .timeline-content {
+            background-color: var(--panel);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .timeline-time {
+            font-family: var(--font-mono);
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .bring-list {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .bring-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .bring-list li::before {
+            content: ">";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            font-family: var(--font-mono);
+        }
+
+        /* Venue Map Section */
+        .map-container {
+            background-color: var(--panel);
+            border: 1px solid rgba(255, 46, 230, 0.2);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .map-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--muted);
+        }
+
+        .transport-tips {
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+
+        /* FAQ Section */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--panel);
+            border-top: 1px solid rgba(0, 255, 156, 0.2);
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--muted);
+            border-radius: 50%;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .made-with {
+            margin-top: 1rem;
+            font-family: var(--font-mono);
+            color: var(--muted);
+            position: relative;
+            display: inline-block;
+        }
+
+        .made-with:hover {
+            color: var(--primary);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--panel);
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            padding: 1rem 1.5rem;
+            color: var(--text);
+            font-family: var(--font-mono);
+            box-shadow: 0 0 10px rgba(0, 255, 156, 0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 10000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            border-color: var(--danger);
+            box-shadow: 0 0 10px rgba(255, 77, 77, 0.3);
+        }
+
+        /* Command Palette */
+        .command-palette {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background-color: var(--panel);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            z-index: 1001;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .command-palette.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .command-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .command-close {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .command-list {
+            list-style: none;
+        }
+
+        .command-item {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .command-item:hover {
+            background-color: rgba(0, 255, 156, 0.1);
+        }
+
+        .command-key {
+            font-family: var(--font-mono);
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Copy to clipboard buttons */
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Progress bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: transparent;
+            z-index: 1001;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .about-text {
+                padding-right: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                background-color: var(--panel);
+                width: 80%;
+                height: calc(100vh - 70px);
+                flex-direction: column;
+                padding: 2rem;
+                transition: right 0.3s ease;
+                border-left: 1px solid rgba(0, 255, 156, 0.2);
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .nav-menu li {
+                margin: 1rem 0;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .facts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            section {
+                padding: 3rem 0;
+            }
+            
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                padding-left: 60px;
+            }
+            
+            .timeline-bullet {
+                left: 12px;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            
+            .terminal-cursor {
+                animation: none;
+            }
+            
+            #matrix-canvas {
+                display: none;
+            }
+        }
+        /* EZBuzzer download notice */
+.ezbuzzer-notice {
+    background: rgba(0, 229, 255, 0.1);
+    border: 1px solid var(--secondary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.ezbuzzer-notice h3 {
+    color: var(--secondary);
+    margin-bottom: 0.5rem;
+}
+
+.ezbuzzer-notice .btn {
+    margin: 0.5rem;
+}
+
+/* Custom select styling */
+.custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300e5ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+.custom-select:focus {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff2ee6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+/* Team members input */
+.team-members {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.member-input {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+@media (max-width: 576px) {
+    .member-input {
+        grid-template-columns: 1fr;
+    }
+}
+.text-center {
+    text-align: center;
+}
+
+.registration-form {
+    background-color: var(--panel);
+    border: 1px solid rgba(255, 46, 230, 0.2);
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.registration-form p {
+    margin-bottom: 1.5rem;
+    font-family: var(--font-mono);
+    color: var(--secondary);
+    font-size: 1.1rem;
+}
+
+.registration-form .btn {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+}
+/* Venue Section */
+#venue {
+    background-color: var(--bg);
+    padding: 5rem 0;
+}
+
+#venue h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+/* Map container box */
+.map-container {
+    background-color: var(--panel);
+    border: 1px solid rgba(255, 46, 230, 0.2);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(255, 46, 230, 0.15);
+    transition: all 0.3s ease;
+}
+
+.map-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
+}
+
+/* Map image */
+.map-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--muted);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+}
+
+/* Google Maps button */
+.map-container .btn {
+    margin: 1rem 0 2rem 0;
+}
+
+/* Transportation tips box */
+.transport-tips {
+    margin-top: 2rem;
+    text-align: left;
+    background-color: rgba(0, 229, 255, 0.05);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 6px;
+    padding: 1.5rem;
+}
+
+.transport-tips h3 {
+    color: var(--secondary);
+    margin-bottom: 1rem;
+}
+
+.transport-tips p {
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .map-container {
+        padding: 1.5rem;
+    }
+    .transport-tips {
+        font-size: 0.9rem;
+    }
+}
+/* Map iframe styling */
+.map-iframe {
+    width: 100%;
+    height: 400px;
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.map-iframe:hover {
+    transform: scale(1.01);
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.35);
+}
+.map-alt {
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 229, 255, 0.08),
+        rgba(0, 229, 255, 0.08) 10px,
+        transparent 10px,
+        transparent 20px
+    );
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: 8px;
+    padding: 3rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    color: var(--secondary);
+    font-size: 1.2rem;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.map-alt:hover {
+    background-color: rgba(0, 229, 255, 0.1);
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.25);
+}
+
+.map-alt-text {
+    display: inline-block;
+    position: relative;
+}
+
+.map-alt-text::after {
+    content: "_";
+    color: var(--primary);
+    animation: blink 1s infinite;
+    margin-left: 5px;
+}
+/* Container around the iframe */
+.map-frame-container {
+    background-color: var(--panel);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+    margin: 0 auto 2rem auto;
+    max-width: 800px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Fake terminal header */
+.map-frame-header {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--secondary);
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+    background: rgba(0, 229, 255, 0.05);
+    text-align: left;
+}
+
+/* Terminal dots like Mac window */
+.map-frame-header::before {
+    content: "● ● ●";
+    color: var(--accent);
+    margin-right: 1rem;
+}
+
+/* Styled iframe itself */
+.map-iframe {
+    width: 100%;
+    height: 400px;
+    border: none;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    filter: grayscale(20%) contrast(1.2) brightness(0.9);
+    transition: all 0.4s ease;
+}
+
+/* Glitch hover effect */
+.map-frame-container:hover .map-iframe {
+    filter: grayscale(0) contrast(1.1) brightness(1.1);
+    box-shadow: 0 0 25px rgba(0, 229, 255, 0.3);
+    transform: scale(1.01);
+}
+/* Map frame container */
+.map-frame-container {
+    background-color: var(--panel);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+    margin: 2rem auto;
+    max-width: 800px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Fake terminal header */
+.map-frame-header {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--secondary);
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+    background: rgba(0, 229, 255, 0.05);
+    text-align: left;
+}
+
+.map-frame-header::before {
+    content: "● ● ●";
+    color: var(--accent);
+    margin-right: 1rem;
+}
+
+/* The iframe itself */
+.map-iframe {
+    width: 100%;
+    height: 450px;
+    border: none;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+    filter: grayscale(15%) contrast(1.15) brightness(0.95);
+    transition: all 0.4s ease;
+}
+
+/* Hover glow */
+.map-frame-container:hover .map-iframe {
+    filter: grayscale(0) contrast(1.05) brightness(1.1);
+    box-shadow: 0 0 25px rgba(0, 229, 255, 0.3);
+    transform: scale(1.01);
+}
+.fact-card p {
+    padding-left: 1.5rem;
+    margin-bottom: 0;
+    color: var(--muted);
+    word-break: break-word;   /* allow breaking long words like emails */
+    overflow-wrap: anywhere;  /* modern equivalent for better wrapping */
+    white-space: normal;      /* make sure text can wrap */
+}
+
+.fact-card a {
+    color: var(--secondary);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    word-break: break-all;
+}
+
+.fact-card a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <a href="#" class="logo">Ctrl+Alt+Elite</a>
+            <button class="hamburger" id="hamburger">&#9776;</button>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#about">About</a></li>
+                <li><a href="#facts">Key Facts</a></li>
+                <li><a href="#rules">Rules</a></li>
+                <li><a href="#register">Register</a></li>
+                <li><a href="#study">Study Material</a></li>
+                <li><a href="#schedule">Schedule</a></li>
+                <li><a href="#venue">Venue</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <canvas id="matrix-canvas"></canvas>
+        <div class="container hero-content">
+            <h1 class="glitch" data-text="Ctrl+Alt+Elite">Ctrl+Alt+Elite</h1>
+            <p class="hero-tagline">Where Every Mind is Wired to Win</p>
+            
+            <div class="terminal-container">
+                <div class="terminal-line">
+                    <span class="terminal-prompt">> </span>
+                    <span class="terminal-command" id="typing-text"></span>
+                    <span class="terminal-cursor"></span>
+                </div>
+            </div>
+            
+            <div class="hero-buttons">
+                <a href="#register" class="btn">Register Now</a>
+                <a href="#about" class="btn btn-secondary">Event Details</a>
+            </div>
+            <br>
+            <!-- Add this inside your hero section, after the buttons -->
+<div class="hero-note">
+    <p>Don't forget to download the EZBuzzer app before the event!</p>
+    <a href="#register" class="btn btn-secondary">Download Instructions</a>
+</div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <h2>About the Event</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>A high-voltage, buzzer-only, MCQ-driven tech quiz from the IT Club, designed so every program—from BCA to BBA—can outsmart and outbuzz.</p>
+                    <p>Ctrl+Alt+Elite is an elite intra-college tech quiz for all programs (BCA, MCA, BBA, MBA, B.Sc Animation & Multimedia, B.Com (Financial Analytics), B.Sc (CS)).</p>
+                    <p>Emphasizing inclusivity and intensity, this buzzer-only format is designed for creating an electrifying competition where quick thinking triumphs.</p>
+                </div>
+                <div class="info-cards">
+                    <div class="info-card">
+                        <i>🔊</i>
+                        <h4>Buzzer-Only</h4>
+                        <p>EZBuzzer</p>
+                    </div>
+                    <div class="info-card">
+                        <i>👥</i>
+                        <h4>All Programs</h4>
+                        <p>Inclusive for all disciplines</p>
+                    </div>
+                    <div class="info-card">
+                        <i>⚡</i>
+                        <h4>Quick Fire</h4>
+                        <p>Fast-paced questioning</p>
+                    </div>
+                    <div class="info-card">
+                        <i>🏆</i>
+                        <h4>Elite Status</h4>
+                        <p>Prestige and prizes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Facts Section -->
+    <section id="facts" style="background-color: var(--panel);">
+        <div class="container">
+            <h2>Key Facts</h2>
+            <div class="facts-grid">
+                <div class="fact-card">
+                    <h3>Date</h3>
+                    <p>September 12, 2023 <button class="copy-btn" data-text="September 12, 2023">📋</button></p>
+                </div>
+                <div class="fact-card">
+                    <h3>Time</h3>
+                    <p>2:00 PM - 3:00 PM (60 minutes) <button class="copy-btn" data-text="2:00 PM - 3:00 PM">📋</button></p>
+                </div>
+                <div class="fact-card">
+                    <h3>Venue</h3>
+                    <p>BIT Mesra, Noida Campus — Auditorium <button class="copy-btn" data-text="BIT Mesra, Noida Campus — Auditorium">📋</button></p>
+                </div>
+                <div class="fact-card">
+                    <h3>Format</h3>
+                    <p>Buzzer-based MCQ rounds (Quick Fire, Debug, Visual, Lightning)</p>
+                </div>
+                <div class="fact-card">
+                    <h3>Participants</h3>
+                    <p>Teams of 2–3</p>
+                </div>
+                <div class="fact-card">
+                    <h3>Total Questions</h3>
+                    <p>~40</p>
+                </div>
+                <div class="fact-card">
+                    <h3>Devices</h3>
+                    <p>Phones allowed only as buzzers; no internet use during rounds</p>
+                </div>
+                <div class="fact-card">
+                    <h3>Platforms</h3>
+                    <p>EZBuzzer</p>
+                </div>
+                <div class="fact-card">
+                    <h3>Contact</h3>
+                    <p><a href="mailto:kashyapshashwat77@gmail.com">kashyapshashwat77@gmail.com</a> <button class="copy-btn" data-text="kashyapshashwat77@gmail.com">📋</button></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rounds & Rules Section -->
+    <section id="rules">
+        <div class="container">
+            <h2>Rounds & Rules</h2>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header">Round 1 – Fast & Curious: MCQs</div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p>General tech knowledge multiple choice questions. +10 for correct answers, -5 for incorrect.</p>
+                            <ul class="rules-list">
+                                <li>15 questions</li>
+                                <li>10 seconds per question</li>
+                                <li>Topics: Everyday tech, apps, gadgets</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">Round 2 – Debug the Bug: Code Snippets</div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p>Identify errors in code snippets or logical traps. +10 for correct answers, -5 for incorrect.</p>
+                            <ul class="rules-list">
+                                <li>10 questions</li>
+                                <li>15 seconds per question</li>
+                                <li>Topics: Basic programming concepts</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">Round 3 – Visual Blitz: Logos/UI/Screens</div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p>Identify companies, apps, or interfaces from visual cues. +10 for correct answers, -5 for incorrect.</p>
+                            <ul class="rules-list">
+                                <li>8 questions</li>
+                                <li>10 seconds per question</li>
+                                <li>Topics: Brand logos, UI elements, screenshots</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">Round 4 – Lightning Finale: Rapid MCQs</div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p>Quick-fire questions in rapid succession. +5 for correct answers, 0 for incorrect.</p>
+                            <ul class="rules-list">
+                                <li>7 questions</li>
+                                <li>5 seconds per question</li>
+                                <li>Topics: Mixed bag from all categories</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">Tie-breaker Rules</div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p>Sudden-death debug MCQ for tied teams:</p>
+                            <ul class="rules-list">
+                                <li>First correct answer wins</li>
+                                <li>If both incorrect, next question</li>
+                                <li>Continues until tie is broken</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">Fair Play & General Rules</div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <ul class="rules-list">
+                                <li>Phones must remain face-down except for buzzer use</li>
+                                <li>No internet use during rounds</li>
+                                <li>Appeals may be made via team captain only</li>
+                                <li>Judge's decision is final</li>
+                                <li>Accessibility rule: Brief explanation after each question</li>
+                                <li>No Google Forms during quiz; EZBuzzer only</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Registration Section -->
+<section id="register" style="background-color: var(--panel);">
+    <div class="container">
+        <h2>Registration</h2>
+        <br>
+        <p class="text-center">Register your team for Ctrl+Alt+Elite. No Google Forms during the quiz. EZBuzzer only.</p>
+        <br>
+        
+        <!-- Debug console - visible during development -->
+        <div id="debug-console" style="display: none; background: #1a1a1a; color: #00ff9c; padding: 15px; border-radius: 5px; margin: 20px 0; font-family: 'JetBrains Mono', monospace; max-height: 200px; overflow-y: auto;">
+            <h4 style="color: #00e5ff; margin-bottom: 10px;">Debug Console</h4>
+            <div id="debug-output"></div>
+        </div>
+        
+        <!-- Add this EZBuzzer download notice -->
+        <div class="ezbuzzer-notice">
+            <h3>📱 Download EZBuzzer App</h3>
+            <p>All participants must install the EZBuzzer app before the event.</p>
+            <a href="https://play.google.com/store/apps/details?id=com.braultomatic.ezbuzzer&hl=en_IN" target="_blank" class="btn btn-secondary">Download for Android</a>
+            <a href="https://apps.apple.com/il/app/ezbuzzer/id1635404640" target="_blank" class="btn btn-secondary">Download for iOS</a>
+        </div>
+        <br>
+<div class="registration-form text-center">
+    <p>Register your team for Ctrl+Alt+Elite via our official Google Form.</p>
+    <a href="https://forms.gle/your-google-form-link" target="_blank" class="btn btn-accent">
+
+        🚀 Fill Google Form
+        
+    </a>
+</div>
+<p class="privacy-note">Your data will be used only for event coordination and will not be shared with third parties.</p>
+
+    </div>
+</section>
+
+    <!-- Study Material Section -->
+    <section id="study">
+        <div class="container">
+            <h2>Study Material</h2>
+            <p class="text-center">Curated resources to help you prepare for the quiz. Categories:</p>
+            <br>
+            
+            <div class="categories">
+                <div class="category-chip active">All Topics</div>
+                <div class="category-chip">Everyday Tech & Apps</div>
+                <div class="category-chip">Business & Analytics</div>
+                <div class="category-chip">Media/Design</div>
+                <div class="category-chip">Data Literacy</div>
+                <div class="category-chip">CS Core</div>
+                <div class="category-chip">Indian Tech & Policy</div>
+                <div class="category-chip">Pop-Tech Culture</div>
+            </div>
+            
+            <div class="sample-questions">
+                <h3>Sample Questions</h3>
+                
+                <div class="question-item">
+                    <div class="question-header">
+                        <span>Which company developed the React JavaScript library?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="question-answer">
+                        <p><strong>Answer:</strong> Facebook (now Meta)</p>
+                        <p><strong>Explanation:</strong> React was originally created by Jordan Walke, a software engineer at Facebook, and was first deployed on Facebook's News Feed in 2011 and on Instagram in 2012.</p>
+                    </div>
+                </div>
+                
+                <div class="question-item">
+                    <div class="question-header">
+                        <span>What does API stand for in programming?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="question-answer">
+                        <p><strong>Answer:</strong> Application Programming Interface</p>
+                        <p><strong>Explanation:</strong> An API is a set of definitions and protocols for building and integrating application software, allowing different applications to communicate with each other.</p>
+                    </div>
+                </div>
+                
+                <div class="question-item">
+                    <div class="question-header">
+                        <span>Which of these is NOT a relational database management system?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="question-answer">
+                        <p><strong>Answer:</strong> MongoDB</p>
+                        <p><strong>Explanation:</strong> MongoDB is a document-oriented NoSQL database, while MySQL, PostgreSQL, and Oracle are all relational database management systems (RDBMS).</p>
+                    </div>
+                </div>
+                
+                <div class="question-item">
+                    <div class="question-header">
+                        <span>What technology is used to make cryptocurrency transactions secure?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="question-answer">
+                        <p><strong>Answer:</strong> Blockchain</p>
+                        <p><strong>Explanation:</strong> Blockchain is a decentralized, distributed ledger technology that records the provenance of a digital asset, making it secure and transparent.</p>
+                    </div>
+                </div>
+                
+                <div class="question-item">
+                    <div class="question-header">
+                        <span>Which programming language is known for its use in data science and machine learning?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="question-answer">
+                        <p><strong>Answer:</strong> Python</p>
+                        <p><strong>Explanation:</strong> Python is widely used in data science and machine learning due to its simplicity, readability, and extensive libraries like NumPy, Pandas, and Scikit-learn.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Schedule & Flow Section -->
+    <section id="schedule" style="background-color: var(--panel);">
+        <div class="container">
+            <h2>Schedule & Flow</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-bullet"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-time">T−10 min</div>
+                        <h3>Check-in & Buzzer Demo</h3>
+                        <p>Teams check in and get familiar with the EZBuzzer system. Quick practice round to ensure everyone understands the buzzer mechanics.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-bullet"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-time">0:00–0:15</div>
+                        <h3>Preliminary Round</h3>
+                        <p>First elimination round with general tech questions. Top teams advance to the finals.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-bullet"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-time">0:15–0:45</div>
+                        <h3>Finals (Rounds 1–4)</h3>
+                        <p>Main event with four rounds: Fast & Curious, Debug the Bug, Visual Blitz, and Lightning Finale.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-bullet"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-time">0:45–1:00</div>
+                        <h3>Results & Awards</h3>
+                        <p>Score tallying, tie-breakers if needed, and announcement of winners followed by prize distribution.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bring-list-container">
+                <h3>What to Bring</h3>
+                <ul class="bring-list">
+                    <li>College ID card (mandatory)</li>
+                    <li>Fully charged smartphone for buzzer use</li>
+                    <li>Water bottle (optional)</li>
+                    <li>Enthusiasm and quick reflexes!</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Venue Map Section -->
+    <section id="venue">
+        <div class="container">
+            <h2>Venue Map</h2>
+            
+<div class="map-frame-container">
+    <div class="map-frame-header">> BIT_Noida_Campus:~$ maps --open</div>
+    
+    <iframe
+        class="map-iframe"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3503.3674133316854!2d77.30713507601527!3d28.58875258606658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce4f52c768c1d%3A0x106d0bd4d6f0cbe3!2sBirla%20Institute%20of%20Technology%20Mesra%2C%20Off-Campus%20Noida!5e0!3m2!1sen!2sin!4v1755884358372!5m2!1sen!2sin"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+</div>
+
+<a href="https://maps.google.com/?q=BIT+Mesra+Noida+Campus" target="_blank" class="btn btn-secondary">Open in Google Maps</a>
+
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" style="background-color: var(--panel);">
+        <div class="container">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-container">
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">Can non-tech students win?</div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <p>Absolutely! The quiz is designed to be balanced for all programs. Questions cover a wide range of topics from everyday tech to business analytics, ensuring a level playing field for everyone.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">Do I need to know how to code?</div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <p>While there is a debugging round, all questions are multiple-choice and focus on logical thinking rather than writing code. No laptops are allowed, and the debugging questions are designed to be accessible to all participants.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">What is the team size?</div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <p>Teams should consist of 2-3 members. You can register as a complete team or individually and we'll help form teams before the event.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">Is there a registration fee?</div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <p>No, participation is completely free for all BIT Noida students.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">Are there prizes for winners?</div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <p>Yes! The winning team will receive a trophy, goodies, and certificates. There's also a special rookie award for the best all-first-year team.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">Is there a dress code?</div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <p>Dress code is casual. Just wear something comfortable. The most important thing is to be on time!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>IT Club • BIT Noida</p>
+            
+            <div class="social-icons">
+                <a href="#" class="social-icon">F</a>
+                <a href="#" class="social-icon">T</a>
+                <a href="#" class="social-icon">I</a>
+                <a href="#" class="social-icon">L</a>
+            </div>
+            
+            <p class="copyright">© <span id="current-year"></span> IT Club BIT Noida. All rights reserved.</p>
+            <a href="https://github.com/Shashwat-k-9114" target="_blank"><p class="made-with">Made with &lt; / &gt; and caffeine by Shashwat Kashyap</p></a>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Command Palette -->
+    <div class="overlay" id="overlay"></div>
+    <div class="command-palette" id="command-palette">
+        <div class="command-header">
+            <h3>Command Palette</h3>
+            <button class="command-close" id="command-close">&times;</button>
+        </div>
+        <ul class="command-list">
+            <li class="command-item" data-target="#about"><span class="command-key">></span> About the Event</li>
+            <li class="command-item" data-target="#facts"><span class="command-key">></span> Key Facts</li>
+            <li class="command-item" data-target="#rules"><span class="command-key">></span> Rules & Rounds</li>
+            <li class="command-item" data-target="#register"><span class="command-key">></span> Registration</li>
+            <li class="command-item" data-target="#study"><span class="command-key">></span> Study Material</li>
+            <li class="command-item" data-target="#faq"><span class="command-key">></span> FAQs</li>
+            <li class="command-item" data-target="#venue"><span class="command-key">></span> Venue Map</li>
+        </ul>
+    </div>
+
+    <script>
+        // DOM Ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            
+            // Initialize Matrix Rain
+            initMatrixRain();
+            
+            // Initialize typing effect
+            initTypingEffect();
+            
+            // Initialize scroll progress bar
+            initProgressBar();
+            
+            // Initialize accordions
+            initAccordions();
+            
+            // Initialize navigation
+            initNavigation();
+            
+            // Initialize form validation
+            initFormValidation();
+            
+            // Initialize copy buttons
+            initCopyButtons();
+            
+            // Initialize command palette
+            initCommandPalette();
+            
+            // Initialize question toggles
+            initQuestionToggles();
+        });
+
+        // Matrix Rain Background
+        function initMatrixRain() {
+            const canvas = document.getElementById('matrix-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas dimensions
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Matrix characters
+            const matrixChars = "01";
+            const chars = matrixChars.split('');
+            
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            
+            // Drops array - one per column
+            const drops = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = 1;
+            }
+            
+            // Draw function
+            function draw() {
+                // Semi-transparent black to create trail effect
+                ctx.fillStyle = 'rgba(10, 15, 15, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#00ff9c';
+                ctx.font = `${fontSize}px JetBrains Mono`;
+                
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars[Math.floor(Math.random() * chars.length)];
+                    
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    
+                    // Send drop back to top after reaching bottom
+                    // Randomly reset drop to make it more interesting
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    
+                    drops[i]++;
+                }
+            }
+            
+            // Animation interval
+            let matrixInterval = setInterval(draw, 33);
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                
+                // Recalculate columns
+                const newColumns = canvas.width / fontSize;
+                
+                // Adjust drops array
+                if (newColumns > drops.length) {
+                    // Add new columns
+                    for (let i = drops.length; i < newColumns; i++) {
+                        drops[i] = Math.floor(Math.random() * canvas.height / fontSize);
+                    }
+                } else if (newColumns < drops.length) {
+                    // Remove extra columns
+                    drops.length = newColumns;
+                }
+            });
+            
+            // Respect reduced motion preference
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                clearInterval(matrixInterval);
+            }
+        }
+
+        // Typing Effect
+        function initTypingEffect() {
+            const typingElement = document.getElementById('typing-text');
+            const messages = [
+                "Initializing Ctrl+Alt+Elite system...",
+                "Loading tech quiz modules...",
+                "Preparing buzzer interface...",
+                "System ready. Welcome to the elite tech challenge!"
+            ];
+            
+            let messageIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let isWaiting = false;
+            
+            function type() {
+                if (isWaiting) return;
+                
+                const currentMessage = messages[messageIndex];
+                
+                if (!isDeleting && charIndex < currentMessage.length) {
+                    // Typing forward
+                    typingElement.textContent = currentMessage.substring(0, charIndex + 1);
+                    charIndex++;
+                    setTimeout(type, 50);
+                } else if (isDeleting && charIndex > 0) {
+                    // Deleting
+                    typingElement.textContent = currentMessage.substring(0, charIndex - 1);
+                    charIndex--;
+                    setTimeout(type, 30);
+                } else {
+                    // Switch between messages
+                    isDeleting = !isDeleting;
+                    
+                    if (!isDeleting) {
+                        messageIndex = (messageIndex + 1) % messages.length;
+                    }
+                    
+                    isWaiting = true;
+                    setTimeout(() => {
+                        isWaiting = false;
+                        type();
+                    }, isDeleting ? 1000 : 200);
+                }
+            }
+            
+            // Start the typing effect
+            type();
+        }
+
+        // Scroll Progress Bar
+        function initProgressBar() {
+            const progressBar = document.getElementById('progress-bar');
+            
+            window.addEventListener('scroll', function() {
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight - windowHeight;
+                const scrollPosition = window.scrollY;
+                
+                const progress = (scrollPosition / documentHeight) * 100;
+                progressBar.style.width = progress + '%';
+            });
+        }
+
+        // Accordion functionality
+        function initAccordions() {
+            const accordionItems = document.querySelectorAll('.accordion-item');
+            
+            accordionItems.forEach(item => {
+                const header = item.querySelector('.accordion-header');
+                
+                header.addEventListener('click', function() {
+                    // Toggle active class on clicked item
+                    item.classList.toggle('active');
+                    
+                    // Close other accordion items
+                    accordionItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        }
+
+        // Navigation functionality
+        function initNavigation() {
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('nav-menu');
+            
+            // Toggle mobile menu
+            hamburger.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                hamburger.textContent = navMenu.classList.contains('active') ? '✕' : '☰';
+            });
+            
+            // Close mobile menu when clicking on a link
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navMenu.classList.remove('active');
+                    hamburger.textContent = '☰';
+                });
+            });
+        }
+
+        // Form Validation
+function doPost(e) {
+  try {
+    // Log the received data
+    console.log("Received data:", e.postData.contents);
+    
+    const data = JSON.parse(e.postData.contents);
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    
+    // Append data to sheet
+    const row = [
+      new Date(),
+      data.name,
+      data.rollno,
+      data.phone,
+      data.email,
+      data.team,
+      data.course,
+      data.member1_name,
+      data.member1_rollno,
+      data.member2_name || '',
+      data.member2_rollno || '',
+      data.member3_name || '',
+      data.member3_rollno || ''
+    ];
+    
+    sheet.appendRow(row);
+    
+    // Send confirmation email (optional - remove if causing issues)
+    try {
+      sendConfirmationEmail(data);
+    } catch (emailError) {
+      console.error("Email error:", emailError);
+      // Continue even if email fails
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'success',
+      message: 'Registration successful'
+    })).setMimetype(ContentService.MimeType.JSON);
+    
+  } catch (error) {
+    console.error("Full error:", error);
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'error',
+      message: error.toString()
+    })).setMimetype(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet() {
+  return ContentService.createTextOutput("GET request received. Use POST for form submissions.");
+}
+        // Copy to Clipboard buttons
+        function initCopyButtons() {
+            const copyButtons = document.querySelectorAll('.copy-btn');
+            
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const textToCopy = this.getAttribute('data-text');
+                    
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        const toast = document.getElementById('toast');
+                        toast.textContent = 'Copied to clipboard!';
+                        toast.classList.add('show');
+                        
+                        setTimeout(() => {
+                            toast.classList.remove('show');
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Could not copy text: ', err);
+                    });
+                });
+            });
+        }
+
+        // Command Palette (Ctrl/Cmd+K)
+        function initCommandPalette() {
+            const overlay = document.getElementById('overlay');
+            const commandPalette = document.getElementById('command-palette');
+            const commandClose = document.getElementById('command-close');
+            const commandItems = document.querySelectorAll('.command-item');
+            
+            // Open command palette with Ctrl/Cmd+K
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    openCommandPalette();
+                }
+                
+                if (e.key === 'Escape') {
+                    closeCommandPalette();
+                }
+            });
+            
+            // Close command palette when clicking on overlay or close button
+            overlay.addEventListener('click', closeCommandPalette);
+            commandClose.addEventListener('click', closeCommandPalette);
+            
+            // Handle command item clicks
+            commandItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const target = this.getAttribute('data-target');
+                    closeCommandPalette();
+                    
+                    // Scroll to target section
+                    document.querySelector(target).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            function openCommandPalette() {
+                overlay.classList.add('show');
+                commandPalette.classList.add('show');
+            }
+            
+            function closeCommandPalette() {
+                overlay.classList.remove('show');
+                commandPalette.classList.remove('show');
+            }
+        }
+
+        // Sample question toggles
+        function initQuestionToggles() {
+            const questionItems = document.querySelectorAll('.question-item');
+            
+            questionItems.forEach(item => {
+                const header = item.querySelector('.question-header');
+                
+                header.addEventListener('click', function() {
+                    item.classList.toggle('active');
+                });
+            });
+        }
+        // Add this to your initFormValidation function
+function initFormValidation() {
+    const form = document.getElementById('registration-form');
+    const toast = document.getElementById('toast');
+    
+    // Add this roll number validation function
+    function validateRollNo(rollno) {
+        const pattern = /^[A-Za-z]+\/[0-9]{5}\/[0-9]{2}$/;
+        return pattern.test(rollno);
+    }
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Basic validation
+        const name = document.getElementById('name').value.trim();
+        const rollno = document.getElementById('rollno').value.trim();
+        const team = document.getElementById('team').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const course = document.getElementById('course').value;
+        const phone = document.getElementById('phone').value.trim();
+        
+        // Roll number validation
+        if (!validateRollNo(rollno)) {
+            showToast('Please enter a valid roll number in the format: MCA/45009/24', true);
+            return;
+        }
+        
+        // ... rest of your validation code
+    });
+}
+    </script>
+</body>
+</html>
